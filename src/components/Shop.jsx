@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { API_KEY, API_URL } from '../config'
 import { Preloader } from './Preloader'
 import { GoodsList } from './GoodsList'
 
+import { useContext } from 'react'
+import { ShopContext } from '../context'
+
 function Shop() {
-  const [goods, setGoods] = useState([])
-  const [loading, setLoading] = useState(true)
+  const {goods, setGoods, loading, disableLoading} = useContext(ShopContext)
 
   useEffect(() => {
      fetch(API_URL, {
@@ -15,11 +17,11 @@ function Shop() {
     })
       .then(response => response.json())
       .then((data) => {
-        data.shop && setGoods(data.shop)
-        setLoading(false)
+        setGoods(data.shop)
+        disableLoading()
       })
 
-  },[])
+  },[setGoods, disableLoading])
 
   return (
     <main className="container content">
